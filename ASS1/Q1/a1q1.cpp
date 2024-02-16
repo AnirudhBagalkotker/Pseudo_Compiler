@@ -234,6 +234,8 @@ string removeBrackets(string s)
 			x[j++] = '.';
 		else if (s[i] == '*' && (s[i + 1] == '(' || (s[i + 1] >= 97 && s[i + 1] < 122)))
 			x[j++] = '.';
+		else if (s[i] == '?' && (s[i + 1] == '(' || (s[i + 1] >= 97 && s[i + 1] < 122)))
+			x[j++] = '.';
 	}
 
 	x[j++] = ')';
@@ -300,7 +302,7 @@ string regExToPostfix(string s)
 				char temp = ch.top();
 				if (temp == '(')
 					ch.push('.');
-				else if (temp == '*')
+				else if (temp == '*' || temp == '?' || temp == '+')
 				{
 					a[j++] = ch.top();
 					ch.pop();
@@ -327,17 +329,27 @@ string regExToPostfix(string s)
 				char temp = ch.top();
 				if (temp == '(')
 					ch.push('|');
-				else if (temp == '*')
+				else if (temp == '*' || temp == '.' || temp == '?' || temp == '+')
 				{
 					a[j++] = ch.top();
 					ch.pop();
 					ch.push('|');
 				}
-				else if (temp == '.')
+			}
+			break;
+		case '+':
+			if (ch.empty())
+				ch.push('+');
+			else
+			{
+				char temp = ch.top();
+				if (temp == '(' || temp == '.' || temp == '|')
+					ch.push('+');
+				else
 				{
 					a[j++] = ch.top();
 					ch.pop();
-					ch.push('|');
+					ch.push('+');
 				}
 			}
 			break;
@@ -354,6 +366,22 @@ string regExToPostfix(string s)
 					a[j++] = ch.top();
 					ch.pop();
 					ch.push('*');
+				}
+			}
+			break;
+		case '?':
+			if (ch.empty())
+				ch.push('?');
+			else
+			{
+				char temp = ch.top();
+				if (temp == '(' || temp == '.' || temp == '|')
+					ch.push('?');
+				else
+				{
+					a[j++] = ch.top();
+					ch.pop();
+					ch.push('?');
 				}
 			}
 			break;
