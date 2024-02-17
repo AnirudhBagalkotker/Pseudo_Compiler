@@ -1,1 +1,1 @@
-<bb, 1><b, 0><aabababababbabababa, 4><b, 0>
+<baab, 3><aab, 2><abbababa, 1><a, 1><aab, 2><bbababa, 1>

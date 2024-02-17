@@ -1,13 +1,23 @@
+/*
+
+COMPILER CONSTRUCTION
+ASSIGNMENT 1
+Q1
+
+CODE: OR3Y5XLQ
+
+*/
+
 #include <iostream>
-#include <vector>
-#include <set>
 #include <fstream>
-#include <cstring>
 #include <string>
-#include <iomanip>
+#include <cstring>
 #include <map>
 #include <unordered_map>
 #include <stack>
+#include <vector>
+#include <set>
+#include <iomanip>
 
 #define MAX 1000
 #define COLUMNS 5
@@ -27,8 +37,6 @@ class RegExToDFA
      * @param NFAtable the 2D array to be initialized
      *
      * @return void
-     *
-     * @throws None
      */
     void initialiseNFA(int NFAtable[][COLUMNS])
     {
@@ -45,8 +53,6 @@ class RegExToDFA
      * @param i the integer value representing the state
      *
      * @return the name of the state
-     *
-     * @throws None
      */
     string stateName(int i)
     {
@@ -111,8 +117,6 @@ class RegExToDFA
      * @param s the string to use for initialization
      *
      * @return void
-     *
-     * @throws None
      */
     void checkStates(vector<int> v, string s)
     {
@@ -131,8 +135,6 @@ class RegExToDFA
      * @param word the input word to be validated
      *
      * @return true if the word contains only 'a' or 'b' characters, false otherwise
-     *
-     * @throws None
      */
     bool validateWord(string word)
     {
@@ -153,8 +155,6 @@ class RegExToDFA
      * @param x the index of the element to be removed
      *
      * @return void
-     *
-     * @throws None
      */
     void reduceFinalStates(int x)
     {
@@ -170,8 +170,6 @@ class RegExToDFA
      * @param s the input string to be simplified
      *
      * @return the simplified string
-     *
-     * @throws None
      */
     string addBrackets(string s)
     {
@@ -216,8 +214,6 @@ class RegExToDFA
      * @param state the state for which epsilon closure needs to be calculated
      *
      * @return a vector containing the epsilon closure of the given state
-     *
-     * @throws None
      */
     vector<int> eClosure(int NFAtable[][COLUMNS], int state)
     {
@@ -269,8 +265,6 @@ class RegExToDFA
      * @param s the input regular expression
      *
      * @return the postfix notation of the regular expression
-     *
-     * @throws None
      */
     string regExToPostfix(string s)
     {
@@ -417,8 +411,6 @@ class RegExToDFA
      * @param NFAtable the 2D array representing the NFA table
      *
      * @return the number of states in the NFA
-     *
-     * @throws None
      */
     int regExPostfixToNFA(string s, int NFAtable[][COLUMNS])
     {
@@ -505,22 +497,18 @@ class RegExToDFA
                 states += 1;
                 break;
             case '?':
-                // Assuming the element before '?' is already processed and its initial and final states are at the top of the stacks
-                m = initStates[a - 1]; // Initial state of the last processed element
-                n = finStates[b - 1];  // Final state of the last processed element
+                m = initStates[a - 1];
+                n = finStates[b - 1];
 
-                // Add epsilon transitions to simulate the '?' functionality
-                // Create a new initial state with epsilon transitions to both the original initial state and a new final state
-                NFAtable[states][0] = states;     // New initial state
-                NFAtable[states][3] = m;          // Epsilon transition to the original initial state
-                NFAtable[states][4] = states + 1; // Epsilon transition to the new final state
-                initStates[a - 1] = states;       // Update the initial state to the new initial state
+                NFAtable[states][0] = states;
+                NFAtable[states][3] = m;
+                NFAtable[states][4] = states + 1;
+                initStates[a - 1] = states;
                 states += 1;
 
-                // Create a new final state
-                NFAtable[n][3] = states;      // Add epsilon transition from original final state to new final state
-                NFAtable[states][0] = states; // Set the new final state
-                finStates[b - 1] = states;    // Update the final state to the new final state
+                NFAtable[n][3] = states;
+                NFAtable[states][0] = states;
+                finStates[b - 1] = states;
                 states += 1;
                 break;
             }
@@ -533,11 +521,9 @@ class RegExToDFA
      *
      * @param NFAtable 2D array representing the NFA table
      * @param states number of states in the NFA
-     * @param DFAtable 2D array to store the DFA table
-     *representing
-     * @return the number of states in the DFA table
+     * @param DFAtable 2D array to store the DFA table representing
      *
-     * @throws None
+     * @return the number of states in the DFA table
      */
     int NFAtoDFA(int NFAtable[][COLUMNS], int states, string DFAtable[][3])
     {
@@ -546,17 +532,16 @@ class RegExToDFA
         vector<int> v, v1, v2, v3, v4;
 
         bool flag[states];
-        memset(flag, true, sizeof(flag)); // to make sure all states E-closure found
+        memset(flag, true, sizeof(flag));
 
         v = eClosure(NFAtable, initStates[0]);
         flag[initStates[a]] = false;
 
         map_state[v] = stateName(j++);
-        checkStates(v, map_state[v]); // to check whether current state is initial or not
+        checkStates(v, map_state[v]);
 
         stack<vector<int>> st;
         st.push(v);
-        // transition of e-closure to over input symbol a
         while (true)
         {
             while (!st.empty())
@@ -565,20 +550,20 @@ class RegExToDFA
                 v = st.top();
                 st.pop();
                 counter += 1;
-                DFAtable[state][0] = map_state[v]; // find transition of a state over input symbol 'a' and 'b'
+                DFAtable[state][0] = map_state[v];
 
                 for (int i = 0; i < v.size(); i++)
                 {
                     flag[v[i]] = false;
-                    int temp = NFAtable[v[i]][1];  // over input symbol a
-                    int temp1 = NFAtable[v[i]][2]; // over input symbol b
+                    int temp = NFAtable[v[i]][1];
+                    int temp1 = NFAtable[v[i]][2];
                     if (temp >= 0)
                         v1.push_back(temp);
                     if (temp1 >= 0)
                         v3.push_back(temp1);
                 }
 
-                map<int, int> map_temp, map_temp1; // to remove duplicate state
+                map<int, int> map_temp, map_temp1;
                 map<int, int>::iterator it;
 
                 for (int i = 0; i < v1.size(); i++)
@@ -617,13 +602,13 @@ class RegExToDFA
                     string t = map_state[v2];
                     char flag1 = t[0];
                     if (flag1 == 'Q')
-                        DFAtable[state][1] = map_state[v2]; // checking v2 has already been mapped or not
+                        DFAtable[state][1] = map_state[v2];
                     else
                     {
                         DFAtable[state][1] = stateName(j++);
                         map_state[v2] = DFAtable[state][1];
                         checkStates(v2, map_state[v2]);
-                        st.push(v2); // not mapped state will be pushed into stack
+                        st.push(v2);
                     }
                 }
 
@@ -673,19 +658,17 @@ class RegExToDFA
     /**
      * A function to tokenize a string based on a given DFA table and initial state.
      *
-     * @param DFAtable a 2D array representing the DFA table
-     * @param word the input string to be tokenized
-     * @param state the initial state for tokenization
+     * @param DFAtable the DFA table containing transition states
+     * @param word the input string to tokenize
+     * @param state the initial state of the DFA
      *
-     * @return true if the word is accepted by the DFA, false otherwise
-     *
-     * @throws None
+     * @return true if the string is accepted by the DFA, false otherwise
      */
     bool tokenizeString(string DFAtable[][3], string word, int state)
     {
         int len = word.length();
         string temp = initStatesDFA[0];
-        bool check = validateWord(word); // makes sure that word need to be simulated is only consist of 'a' and 'b'
+        bool check = validateWord(word);
 
         if (!check)
             temp = "X";
@@ -732,6 +715,15 @@ class RegExToDFA
     }
 
 public:
+    /**
+     * The main Driver function converts a regular expression to its equivalent
+     * NFA and then a DFA. It then tokenizes the input string based on the DFA.
+     *
+     * @param s the input regular expression
+     * @param word the input string to tokenize
+     *
+     * @return true if the string is accepted by the DFA, false otherwise
+     */
     bool driverCode(string s, string word)
     {
         /*  In NFAtable :-
@@ -758,6 +750,11 @@ public:
         return tokenizeString(DFAtable, word, DFAstate);
     }
 
+    /**
+     * Clears the values of member variables a, b, numInitStatesDFA, and numFinStatesDFA
+     * to 0.
+     *
+     */
     void clear()
     {
         this->a = 0;
@@ -767,6 +764,13 @@ public:
     }
 };
 
+/**
+ * The main function reads from an input file, processes the input word by creating an
+ * object of RegExToDFA class for each regular expression, and then calls the
+ * driverCode function. output is then written to an output file.
+ *
+ * @return 0 on success, 1 on failure
+ */
 int main()
 {
     ifstream inputFile("input.txt");
@@ -781,9 +785,8 @@ int main()
     vector<string> regex;
     string temp;
     while (getline(inputFile, temp))
-    {
         regex.push_back(temp);
-    }
+
     inputFile.close();
 
     ofstream outputFile("output.txt");
@@ -793,9 +796,7 @@ int main()
         return 1;
     }
 
-    int i = 0;
-    int end = str.size();
-    int j = end;
+    int i = 0, end = str.size(), j = end;
     while (i != str.size())
     {
         j = end - i;
@@ -808,7 +809,7 @@ int main()
                 if (obj[k].driverCode(regex[k], str.substr(i, j)))
                 {
                     outputFile << "<" << str.substr(i, j) << ", " << k + 1 << ">";
-                    i = i + j;
+                    i += j;
                     check = 1;
                     break;
                 }
@@ -820,7 +821,7 @@ int main()
         if (j == 0)
         {
             outputFile << "<" << str.substr(i, j + 1) << ", 0>";
-            i = i + 1;
+            i++;
         }
     }
     outputFile << endl;
