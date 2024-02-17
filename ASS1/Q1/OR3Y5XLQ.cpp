@@ -719,40 +719,38 @@ public:
      * The main Driver function converts a regular expression to its equivalent
      * NFA and then a DFA. It then tokenizes the input string based on the DFA.
      *
-     * @param s the input regular expression
+     * @param regExpr the input regular expression
      * @param word the input string to tokenize
      *
      * @return true if the string is accepted by the DFA, false otherwise
      */
-    bool driverCode(string s, string word)
+    bool driverCode(string regExpr, string word)
     {
-        /*  In NFAtable :-
+        /*  In NFAtable array:
             0th COLUMN represents states
             1st COLUMN represents states over input 'a'
             2nd COLUMN represents states over input 'b'
-            3rd COLUMN represents states over input 'e'(epsilon)
+            3rd & 4th COLUMN represents states over input 'e'(epsilon)
             -1 in states COLUMNS represent no state changes over that input.
          */
 
-        int NFAtable[MAX][COLUMNS];
+        int NFAtable[MAX][COLUMNS], states = 0;
         initialiseNFA(NFAtable);
-        int states = 0;
 
-        s = addBrackets(s);
-        s = regExToPostfix(s);
+        regExpr = addBrackets(regExpr);
+        regExpr = regExToPostfix(regExpr);
 
-        states = regExPostfixToNFA(s, NFAtable);
+        states = regExPostfixToNFA(regExpr, NFAtable);
 
         string DFAtable[states][3];
-        int DFAstate = 0;
-        DFAstate = NFAtoDFA(NFAtable, states, DFAtable);
+        int DFAstates = 0;
+        DFAstates = NFAtoDFA(NFAtable, states, DFAtable);
 
-        return tokenizeString(DFAtable, word, DFAstate);
+        return tokenizeString(DFAtable, word, DFAstates);
     }
 
     /**
-     * Clears the values of member variables a, b, numInitStatesDFA, and numFinStatesDFA
-     * to 0.
+     * Clears the values of member variables a, b, numInitStatesDFA, and numFinStatesDFA to 0.
      *
      */
     void clear()
